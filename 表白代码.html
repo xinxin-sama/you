@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>下雪背景效果和爱心</title>
+    <style type="text/css">
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        }
+
+        #snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .snowflake {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #fff;
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: snowfall linear infinite;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        .heart {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            animation: heartbeat 1s infinite, float 3s ease-in-out infinite;
+            transform-origin: center center;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.6));
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .heart:before,
+        .heart:after {
+            content: "";
+            background-color: red;
+            border-radius: 50px 50px 0 0;
+            position: absolute;
+            top: 0;
+        }
+
+        .heart:before {
+            left: 100px;
+            width: 100px;
+            height: 160px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+
+        .heart:after {
+            left: 0;
+            width: 100px;
+            height: 160px;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        #timeElapsed {
+            text-align: center;
+            font-size: 28px;
+            margin-top: 30px;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        @keyframes heartbeat {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes falling {
+            0% {
+                transform: translateY(-100vh);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        .sakura {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 40px;
+            height: 40px;
+            background-image: url('https://i.ibb.co/0jq7Z7L/sakura.png');
+            background-size: cover;
+            animation: falling linear infinite;
+            animation-duration: 10s;
+        }
+
+        .love-word {
+            position: absolute;
+            top: -50px;
+            color: white;
+            font-size: 20px;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            animation: falling linear infinite;
+            font-family: 'Segoe UI', 'Noto Sans', Arial, sans-serif;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="snow-container"></div>
+    <div class="heart"></div>
+    <div id="timeElapsed"></div>
+
+    <script>
+        function getTimeElapsed() {
+            var startDate = new Date("2024-08-31"); // 设置开始日期，替换为实际的起始日期
+            var currentDate = new Date();
+            var timeDiff = currentDate - startDate;
+
+            var milliseconds = timeDiff % 1000;
+            timeDiff = Math.floor(timeDiff / 1000);
+            var seconds = timeDiff % 60;
+            timeDiff = Math.floor(timeDiff / 60);
+            var minutes = timeDiff % 60;
+            timeDiff = Math.floor(timeDiff / 60);
+            var hours = timeDiff % 24;
+            timeDiff = Math.floor(timeDiff / 24);
+            var days = timeDiff;
+
+            var timeString = "宝贝我们已经在一起 " + days + " 天 " + hours + " 小时 " + minutes + " 分钟 " + seconds + " 秒了";
+
+            document.getElementById("timeElapsed").textContent = timeString;
+        }
+
+        setInterval(getTimeElapsed, 1000);
+    </script>
+
+    <script>
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.style.left = Math.random() * window.innerWidth + 'px';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            snowflake.style.opacity = Math.random();
+            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+
+            const randomColor = getRandomColor();
+            snowflake.style.backgroundColor = randomColor;
+
+            snowflake.innerHTML = '❤️'; // 使用爱心符号
+            snowflake.style.fontFamily = 'Arial, sans-serif';
+            snowflake.style.color = '#ff1493';
+            snowflake.style.textShadow = '0 0 5px rgba(255, 20, 147, 0.8)';
+
+            return snowflake;
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function snowfall() {
+            const snowContainer = document.getElementById('snow-container');
+            const numSnowflakes = 50; // Adjust the number of snowflakes here
+
+            for (let i = 0; i < numSnowflakes; i++) {
+                const snowflake = createSnowflake();
+                snowContainer.appendChild(snowflake);
+            }
+        }
+
+        snowfall();
+    </script>
+
+    <script>
+        function createSakura() {
+            var sakura = document.createElement("div");
+            sakura.className = "sakura";
+            sakura.style.left = Math.random() * 100 + "vw";
+            sakura.style.animationDelay = Math.random() * 5 + "s";
+            document.body.appendChild(sakura);
+
+            setTimeout(function () {
+                sakura.remove();
+            }, 10000);
+        }
+
+        setInterval(createSakura, 200);
+
+        const lovePhrases = [
+            "我爱你", "I love you", "Je t'aime", "Ich liebe dich", "Ti amo", 
+            "Te quiero", "Eu te amo", "Я тебя люблю", "愛してる", "사랑해",
+            "ฉันรักคุณ", "Mahal kita", "ฉันรักคุณ", "Szeretlek", "Jag älskar dig",
+            "Ik hou van jou", "Σ'αγαπώ", "Miluji tě", "Kocham Cię", "Te iubesc",
+            "愛你", "මම ඔයාට ආදරෙයි", "මගේ ආදරය", "நான் உன்னை காதலிக்கிறேன்", "मैं तुमसे प्यार करता हूँ",
+            "میں تم سے پیار کرتا ہوں", "أحبك", "אני אוהב אותך", "მიყვარხარ", "Mən səni sevirəm",
+            "Seni seviyorum", "Saya cinta padamu", "Tôi yêu bạn", "Mahal kita", "Nakupenda",
+            "Ndinokuda", "Ke a go rata", "Ek het jou lief", "Jeg elsker dig", "Ég elska þig",
+            "Rakastan sinua", "Mina armastan sind", "Es mīlu tevi", "Aš tave myliu", "Unë të dua",
+            "Volim te", "Ljubim te", "Te iubesc", "Te amo", "Te quiero", "Eu te amo"
+        ];
+
+        function createLoveWord() {
+            const word = document.createElement('div');
+            word.classList.add('love-word');
+            word.textContent = lovePhrases[Math.floor(Math.random() * lovePhrases.length)];
+            word.style.left = Math.random() * 100 + 'vw';
+            word.style.animationDuration = Math.random() * 5 + 5 + 's';
+            word.style.fontSize = Math.random() * 10 + 20 + 'px';
+            document.body.appendChild(word);
+
+            setTimeout(() => {
+                word.remove();
+            }, 15000);
+        }
+
+        setInterval(createLoveWord, 500);
+    </script>
+</body>
+</html>
